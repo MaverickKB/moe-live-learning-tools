@@ -1,0 +1,16 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dir: [tools/admission-gates, tools/default-drift-probe, tools/frozen-weight-fingerprint, tools/hot-load, tools/paired-job-start, tools/recall-scorer, tools/recovery-lock, tools/resident-trainer, tools/streamed-vocab-loss, tools/trainer-memory-budget]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --index-url https://download.pytorch.org/whl/cpu torch && pip install pytest
+      - run: cd ${{ matrix.dir }} && python -m pytest -q

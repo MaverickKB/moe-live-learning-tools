@@ -69,10 +69,9 @@ Two of these tools also have their own repositories with deeper docs and example
 
 | Repository | Covers | URL |
 |---|---|---|
-| live-serving-expert-training | resident-trainer: architecture, porting guide, evaluation protocol, results | `https://example.invalid/TODO-fill-at-publish/live-serving-expert-training` (placeholder) |
-| tensor-parallel-side-jobs | paired-job-start + hot-load: sequence diagrams, porting guide, two-process CPU example | `https://example.invalid/TODO-fill-at-publish/tensor-parallel-side-jobs` (placeholder) |
+| live-serving-expert-training | resident-trainer: architecture, porting guide, evaluation protocol, results | https://github.com/MaverickKB/live-serving-expert-training |
+| tensor-parallel-side-jobs | paired-job-start + hot-load: sequence diagrams, porting guide, two-process CPU example | https://github.com/MaverickKB/tensor-parallel-side-jobs |
 
-**TODO at publish time:** replace both placeholder URLs with the real repository URLs.
 
 ## Running tests
 
