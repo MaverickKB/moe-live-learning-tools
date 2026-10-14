@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resident-trainer"
+version = "0.1.0"
+description = "Reference extract: train a few added shared-expert neurons inside a live tensor-parallel MoE server"
+requires-python = ">=3.11"
+license = "MIT AND Apache-2.0"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8", "torch>=2.4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = ["gpu: requires CUDA and the compatible native runtime"]

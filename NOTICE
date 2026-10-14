@@ -1,0 +1,12 @@
+moe-live-learning-tools
+
+Extracted from the GLM RSI Dream research project.
+Copyright 2026 GLM RSI Dream contributors. Original code under the MIT License (LICENSE).
+
+Parts of the engine integration derive from TensorFold 0.6.0 and a two-machine GLM serving
+stack under Apache-2.0, with retained legacy MIT notices. Credit: Ash Hart, TensorFold;
+MiaAI-Lab, two-machine runtime integration. Upstream license texts and notices are retained
+under licenses/.
+
+This extract contains no model weights, checkpoints or containers. Those keep their own
+upstream terms and are obtained separately.
