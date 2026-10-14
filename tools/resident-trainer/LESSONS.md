@@ -1,7 +1,8 @@
 # Lessons learned
 
 Each entry: what failed, why, and what fixed it. All were found on the origin two-machine
-setup during live serving.
+setup during live serving. Entries marked *(inferred details)* have a confirmed one-line
+summary, but the mechanism described was reconstructed from the code, not from an incident write-up.
 
 ## 1. Collective desync froze serving
 - **Symptom:** serving hung for every user when a trainer job started.
@@ -26,19 +27,19 @@ setup during live serving.
 - **Fix:** the doorbell skip. If the pair is not idle after the job, the worker returns to
   reading the next message instead of waiting for the bell.
 
-## 4. Capturing all ten layers tripped a swap gate
+## 4. Capturing all ten layers tripped a swap gate (inferred details)
 - **Symptom:** a host-level swap/memory guard fired during capture.
 - **Cause:** capturing activations at all ten candidate layers at once.
 - **Fix:** capture one layer only (the trained layer). Combined with the free-memory floor.
 
-## 5. Learning-rate scale bug
+## 5. Learning-rate scale bug (inferred details)
 - **Symptom:** effective learning rates differed from the requested `lr_scale`.
 - **Cause:** optimizer state was first built through the probe path, so the stored base
   learning rates were not the checkpoint's.
 - **Fix:** build optimizer state only from the checkpoint and record the original rates
   (`orig_lrs`) once; scale from those.
 
-## 6. Capture race and missing hook registration
+## 6. Capture race and missing hook registration (inferred details)
 - **Symptom:** occasional empty or mismatched captures; some jobs saw no hook at all.
 - **Cause:** a capture could be read before it was complete, and a hook was not
   registered on one path.
@@ -53,5 +54,5 @@ setup during live serving.
 
 ## Unsolved: sibling-value leaks
 Two near-miss facts were answered with a value belonging to a neighbouring fact. Three
-approaches were tried and none fixed it without hurting recall or controls. Use
+approaches were tried (not recorded in detail here) and none fixed it without hurting recall or controls. Use
 `recall_scoring.sibling_leaks` to measure this on your own fact set. Treat it as open.

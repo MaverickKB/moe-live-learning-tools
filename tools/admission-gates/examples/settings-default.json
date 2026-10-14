@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "profile": "default",
+  "_comments": "Strict defaults. Copy and edit for a profile. Guardrails can only be tightened.",
+  "gate1": {"reject_kinds": ["one_off_event", "chatter", "personal_detail"], "min_reuse_score": 0.5},
+  "gate2": {
+    "dream_kinds": ["codebase", "procedure", "api", "background"],
+    "never_dream_kinds": ["location", "hostname", "device", "near_miss", "person_name", "volatile"],
+    "require_source_version_kinds": ["api"],
+    "awareness_only_kinds": ["background"],
+    "min_judge_score": 0.8,
+    "max_promotions_per_dream": 50
+  },
+  "guardrails": {"max_control_regression_pct": 1.0, "max_general_regression_pct": 1.0, "keep_rollback_checkpoints": 3}
+}

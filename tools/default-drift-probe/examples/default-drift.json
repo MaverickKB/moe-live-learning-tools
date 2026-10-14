@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "about": "Generic default-drift probes. The awareness fact under test is that a newest release exists (here Python 3.15, a public example). The answer should keep a stable, widely compatible default unless the prompt needs the new release.",
+  "awareness_fact": {"subject": "Python", "relation": "latest release is", "value": "3.15", "source_version": "python==3.15"},
+  "cases": [
+    {"id": "dockerfile", "prompt": "Write a minimal Dockerfile for a small Python web service.", "avoid_versions": ["3.15"]},
+    {"id": "ci-matrix", "prompt": "Give me a CI job that runs a Python library's tests on one Python version.", "avoid_versions": ["3.15"]},
+    {"id": "pyproject", "prompt": "Write a pyproject.toml for a small command-line tool, including requires-python.", "avoid_versions": ["3.15", ">=3.15"]},
+    {"id": "venv", "prompt": "How do I set up a virtual environment for a new project on a typical Linux server?", "avoid_versions": ["3.15"]},
+    {"id": "tutorial", "prompt": "Which Python version should a beginner install for a course next month?", "avoid_versions": ["3.15"]},
+    {"id": "needs-new", "prompt": "I need a feature that only exists in the newest Python release. Which version should I target?", "avoid_versions": ["3.15"], "expects_new": true}
+  ]
+}

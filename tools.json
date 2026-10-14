@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "tools": [
+    {
+      "name": "resident-trainer",
+      "path": "tools/resident-trainer",
+      "problem": "Train added shared-expert neurons inside a live tensor-parallel MoE server without downtime and without changing base weights",
+      "status": "Ran live on the origin setup; CPU tests pass; engine glue reference-only",
+      "tested_on": "origin setup (live) + CPU tests",
+      "deps": [
+        "python>=3.11",
+        "torch"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": true,
+      "standalone_reason": "Learning inside live serving with no downtime and a proof that base weights never change; the core breakthrough."
+    },
+    {
+      "name": "paired-job-start",
+      "path": "tools/paired-job-start",
+      "problem": "Start, pause and finish a side job in lockstep on two TP ranks inside live serving",
+      "status": "Protocol ran live inside the resident trainer; extracted version CPU-tested only",
+      "tested_on": "origin setup (as part of resident-trainer) + CPU tests",
+      "deps": [
+        "python>=3.11"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": true,
+      "standalone_reason": "The enabling coordination pattern for any side job in a live TP server; best published together with hot-load as one repo."
+    },
+    {
+      "name": "hot-load",
+      "path": "tools/hot-load",
+      "problem": "Change running code on all ranks without a restart, executing exactly the hashed bytes",
+      "status": "Used live on the origin setup; extracted version CPU-tested only",
+      "tested_on": "origin setup (as part of resident-trainer) + CPU tests",
+      "deps": [
+        "python>=3.11"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": true,
+      "standalone_reason": "Pairs with paired-job-start: no-restart code changes across ranks; publish together."
+    },
+    {
+      "name": "trainer-memory-budget",
+      "path": "tools/trainer-memory-budget",
+      "problem": "Keep a background trainer above a free-memory floor; abort only the trainer, on all ranks together",
+      "status": "Ran live inside the resident trainer; extracted version CPU-tested only",
+      "tested_on": "origin setup (as part of resident-trainer) + CPU tests",
+      "deps": [
+        "python>=3.11"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": false
+    },
+    {
+      "name": "frozen-weight-fingerprint",
+      "path": "tools/frozen-weight-fingerprint",
+      "problem": "Prove frozen base weights never changed, cheaply, on device",
+      "status": "Ran live before/after every job on the origin setup; CPU-tested",
+      "tested_on": "origin setup (as part of resident-trainer) + CPU tests",
+      "deps": [
+        "python>=3.11",
+        "torch"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": false
+    },
+    {
+      "name": "streamed-vocab-loss",
+      "path": "tools/streamed-vocab-loss",
+      "problem": "Exact full-vocabulary loss and gradients through a frozen stack under tight memory",
+      "status": "Ran live inside the resident trainer; CPU parity tests",
+      "tested_on": "origin setup (as part of resident-trainer) + CPU tests",
+      "deps": [
+        "python>=3.11",
+        "torch"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": false
+    },
+    {
+      "name": "recovery-lock",
+      "path": "tools/recovery-lock",
+      "problem": "Stop concurrent restart paths racing on the same multi-host server",
+      "status": "Used on the origin setup; CPU-tested",
+      "tested_on": "origin setup + CPU tests",
+      "deps": [
+        "python>=3.11"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": false
+    },
+    {
+      "name": "recall-scorer",
+      "path": "tools/recall-scorer",
+      "problem": "Score pocket-off recall honestly: strict hits, sibling-value leaks, invented specifics",
+      "status": "Origin results were measured with an earlier, infrastructure-bound scorer; this engine-free version is CPU-tested only",
+      "tested_on": "CPU tests",
+      "deps": [
+        "python>=3.11"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": false
+    },
+    {
+      "name": "admission-gates",
+      "path": "tools/admission-gates",
+      "problem": "Decide which facts may be trained into weights and when a pocket entry may be freed",
+      "status": "Built and CPU-tested with stubs; never run live",
+      "tested_on": "CPU tests only",
+      "deps": [
+        "python>=3.11"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": false
+    },
+    {
+      "name": "default-drift-probe",
+      "path": "tools/default-drift-probe",
+      "problem": "Check that learning about a new version does not shift default recommendations",
+      "status": "Built and CPU-tested; never run against a live model",
+      "tested_on": "CPU tests only",
+      "deps": [
+        "python>=3.11"
+      ],
+      "test_deps": [
+        "pytest"
+      ],
+      "standalone_candidate": false
+    }
+  ]
+}

@@ -4,6 +4,8 @@ Train a small set of **added shared-expert neurons** at one middle layer of a la
 mixture-of-experts model **inside the live serving process**, reusing the weights the
 server already has loaded, with no model downtime.
 
+> **Teaching example, not a product.** Adapt the ideas; do not copy it 1:1.
+>
 > **Status: reference extract, not a maintained product.** This code was pulled out of a
 > research project so that people (and their coding agents) can read it, learn from it and
 > adapt it. It ran on one specific setup. It has not been run anywhere else. Expect to
@@ -96,6 +98,11 @@ frozen fingerprint is unchanged.
 | `RESIDENT_TRAINER_LAYER` / `_WATCH_LAYER` | `35` / `44` | Trained layer; extra layer included in the frozen hash |
 
 A `STOP` file in the job root aborts a running job at its next boundary.
+
+## Smaller pieces
+
+The coordination, memory, fingerprint, loss, recovery, hot-load and scoring parts also exist as
+smaller standalone tools under `tools/`. This folder keeps its own copies so it runs on its own.
 
 ## Files
 
