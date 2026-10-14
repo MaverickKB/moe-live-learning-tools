@@ -1,4 +1,4 @@
-from resident_trainer.recall_scoring import score, sibling_leaks
+from resident_trainer.recall_scoring import score, sibling_leaks, value_hit
 
 VALUES = ['atlas', 'beacon', 'host-a.example', 'blue']
 
@@ -31,3 +31,10 @@ def test_toy_example_trains_and_keeps_base_frozen():
     spec.loader.exec_module(module)
     result = module.main(steps=60)
     assert result['frozen_unchanged'] and result['correct_after'] > result['correct_before']
+
+
+def test_empty_reply_scores_as_a_miss():
+    empty = record('f', 'Project codename?', 'atlas', None, True)
+    assert value_hit(empty) is False
+    assert sibling_leaks(empty, VALUES) == []
+    assert score([empty], VALUES) == {'total': 1, 'strict': 0, 'leaked': [], 'abstained': 0}

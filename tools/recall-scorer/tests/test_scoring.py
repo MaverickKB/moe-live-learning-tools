@@ -1,4 +1,5 @@
 from recall_scorer import drop_pct, invented_specifics, score, sibling_leaks
+from recall_scorer.scoring import value_hit
 
 VALUES = ['atlas', 'beacon', 'host-a.example', 'blue']
 
@@ -33,3 +34,11 @@ def test_invented_specifics_flags_only_unsupported_identifiers():
 def test_drop_pct():
     assert drop_pct([], lambda a, b: True) is None
     assert drop_pct([(1, 1), (1, 0), (1, 1), (1, 1)], lambda off, on: on < off) == 25.0
+
+
+def test_empty_reply_scores_as_a_miss():
+    # A server can return a reply with no content (text None); it must count as a miss, not crash.
+    empty = record('f', 'Project codename?', 'atlas', None, True)
+    assert value_hit(empty) is False
+    assert sibling_leaks(empty, VALUES) == []
+    assert score([empty], VALUES) == {'total': 1, 'strict': 0, 'leaked': [], 'abstained': 0}

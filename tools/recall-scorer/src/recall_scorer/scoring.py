@@ -16,8 +16,11 @@ ABSTAIN = re.compile(r"don't have|do not have|no information|not (?:available|kn
 
 
 def contains(text, value):
-    """Whole-token, case-insensitive match (hyphens count as part of a token)."""
-    return re.search(r'(?<![\w-])' + re.escape(value.lower()) + r'(?![\w-])', text.lower()) is not None
+    """Whole-token, case-insensitive match (hyphens count as part of a token).
+
+    A missing answer (None, e.g. an empty reply from the server) contains nothing.
+    """
+    return re.search(r'(?<![\w-])' + re.escape(value.lower()) + r'(?![\w-])', (text or '').lower()) is not None
 
 
 def value_hit(record):
@@ -36,7 +39,7 @@ def score(records, values):
     strict = sum(bool(r.get('passed')) and value_hit(r) for r in records)
     leaked = [(r['id'], sibling_leaks(r, values)) for r in records
               if not r.get('passed') and sibling_leaks(r, values)]
-    abstained = sum(bool(ABSTAIN.search(r['text'])) for r in records)
+    abstained = sum(bool(ABSTAIN.search(r['text'] or '')) for r in records)
     return {'total': len(records), 'strict': strict, 'leaked': leaked, 'abstained': abstained}
 
 
