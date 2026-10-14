@@ -1,4 +1,4 @@
-"""Gate 1 (front funnel) and gate 2 (dream judge)."""
+"""Gate 1 (front funnel) and gate 2 (consolidation judge)."""
 import json
 import time
 
@@ -33,11 +33,11 @@ def eligible(entry, settings, now=None):
     now = time.time() if now is None else now
     if entry["state"] != "held":
         return "state " + entry["state"]
-    if entry["kind"] in g["never_dream_kinds"] or entry["kind"] not in g["dream_kinds"]:
-        return "kind " + entry["kind"] + " does not dream under these settings"
-    if "near_miss" in entry["flags"] and "near_miss" in g["never_dream_kinds"]:
+    if entry["kind"] in g["never_consolidate_kinds"] or entry["kind"] not in g["consolidate_kinds"]:
+        return "kind " + entry["kind"] + " does not consolidate under these settings"
+    if "near_miss" in entry["flags"] and "near_miss" in g["never_consolidate_kinds"]:
         return "near-miss sibling in pocket"
-    if ("superseded" in entry["flags"] and "correct_dream" not in entry["flags"] and g["superseded_is_volatile"] and "volatile" in g["never_dream_kinds"]):
+    if ("superseded" in entry["flags"] and "correct_consolidation" not in entry["flags"] and g["superseded_is_volatile"] and "volatile" in g["never_consolidate_kinds"]):
         return "superseded once, treated as volatile"
     if entry["kind"] in g["require_source_version_kinds"] and not entry.get("source_version"):
         return "missing source_version"
@@ -53,7 +53,7 @@ def judge_prompt(entries, settings):
             {"role": "user", "content": json.dumps({"entries": rows}, ensure_ascii=False)}]
 
 
-def dream_judge(pocket, settings, judge, now=None):
+def consolidation_judge(pocket, settings, judge, now=None):
     """Rank eligible pocket entries and pick a promotion set.
 
     judge(messages) -> {"scores": {id: float}} is the live model call with gate-2
@@ -79,9 +79,9 @@ def dream_judge(pocket, settings, judge, now=None):
     ranked.sort(key=lambda pair: (-pair[0], pair[1]["id"]))
     promote = []
     for score, entry in ranked:
-        if len(promote) >= g["max_promotions_per_dream"]:
-            skipped.append((entry["id"], "over per-dream cap"))
+        if len(promote) >= g["max_promotions_per_pass"]:
+            skipped.append((entry["id"], "over per-pass cap"))
             continue
         mode = "awareness_only" if entry["kind"] in g["awareness_only_kinds"] else "recall"
-        promote.append(dict(entry, judge_score=score, dream_mode=mode))
+        promote.append(dict(entry, judge_score=score, consolidation_mode=mode))
     return promote, skipped

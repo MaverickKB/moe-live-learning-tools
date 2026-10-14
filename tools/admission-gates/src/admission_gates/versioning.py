@@ -10,7 +10,7 @@ API_VERSION_HEADER = "X-Admission-API-Version"
 SCHEMAS = {
     "pocket_entry": 1,
     "pocket_bundle": 1,
-    "dream_bundle": 1,
+    "consolidation_bundle": 1,
     "admission_settings": 1,
 }
 

@@ -1,7 +1,7 @@
 """Tier 1: the persistent catch-all pocket index.
 
 This is the bookkeeping layer over the attention-memory pocket: what is held, why,
-its version, what superseded it, and whether a dream has absorbed it. Encoding an
+its version, what superseded it, and whether a consolidation pass has absorbed it. Encoding an
 entry into attention-memory slots is done by the existing pocket build path; this
 module never frees an entry without a passing pocket-off recall receipt.
 """
@@ -13,7 +13,7 @@ from pathlib import Path
 from .files import write_json
 from .versioning import check, stamp
 
-STATES = ("held", "dreaming", "dreamed", "freed", "superseded")
+STATES = ("held", "consolidating", "consolidated", "freed", "superseded")
 
 
 def entry_id(subject, relation, source_version=None):
@@ -28,7 +28,7 @@ def make_entry(subject, relation, value, kind, source_version=None, source=None,
     return stamp({"id": entry_id(subject, relation, source_version), "subject": subject, "relation": relation,
                   "value": value, "kind": kind, "source_version": source_version, "source": source,
                   "state": "held", "flags": [], "supersedes": [], "superseded_by": None,
-                  "dream_attempts": 0, "created": now if now is not None else time.time()}, "pocket_entry")
+                  "consolidation_attempts": 0, "created": now if now is not None else time.time()}, "pocket_entry")
 
 
 def _tokens(text):
@@ -51,14 +51,14 @@ class Pocket:
             self.load(json.loads(self.path.read_text(encoding="utf-8")))
 
     def live(self):
-        return [e for e in self.entries.values() if e["state"] in ("held", "dreaming", "dreamed")]
+        return [e for e in self.entries.values() if e["state"] in ("held", "consolidating", "consolidated")]
 
     def add(self, entry):
         """Insert, superseding an older live entry with the same subject, relation and version."""
         check(entry, "pocket_entry")
         old = self.entries.get(entry["id"])
         entry = dict(entry, flags=list(entry["flags"]), supersedes=list(entry["supersedes"]))
-        if old and old["state"] in ("held", "dreaming", "dreamed", "freed"):
+        if old and old["state"] in ("held", "consolidating", "consolidated", "freed"):
             if old["value"] == entry["value"]:
                 return old
             old_id = old["id"] + "@" + str(len(old["supersedes"]) + 1)
@@ -67,9 +67,9 @@ class Pocket:
             entry["supersedes"] = old["supersedes"] + [old_id]
             if "superseded" not in entry["flags"]:
                 entry["flags"].append("superseded")
-            if old["state"] in ("dreamed", "freed"):
-                # The old value lives in the weights: the new value must dream over it.
-                entry["flags"].append("correct_dream")
+            if old["state"] in ("consolidated", "freed"):
+                # The old value lives in the weights: the new value must be consolidated over it.
+                entry["flags"].append("correct_consolidation")
                 entry["corrects_value"] = old["value"]
         for other in self.live():
             if other["id"] != entry["id"] and near_miss(other, entry):

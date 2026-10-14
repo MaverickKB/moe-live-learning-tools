@@ -21,16 +21,16 @@ DEFAULTS = {
             "score low. Return only JSON {\"kind\": \"<kind>\", \"reuse_score\": <0..1>}."),
     },
     "gate2": {
-        "dream_kinds": ["codebase", "procedure", "api", "background"],
-        "never_dream_kinds": ["location", "hostname", "device", "near_miss", "person_name", "volatile"],
+        "consolidate_kinds": ["codebase", "procedure", "api", "background"],
+        "never_consolidate_kinds": ["location", "hostname", "device", "near_miss", "person_name", "volatile"],
         "require_source_version_kinds": ["api"],
         "awareness_only_kinds": ["background"],
         "min_judge_score": 0.8,
         "min_pocket_age_seconds": 0,
-        "max_promotions_per_dream": 50,
+        "max_promotions_per_pass": 50,
         "superseded_is_volatile": True,
         "instructions": (
-            "You are the dream judge. Rank pocket entries for permanent weight storage. "
+            "You are the consolidation judge. Rank pocket entries for permanent weight storage. "
             "Prefer stable, general, non-volatile knowledge that many future tasks reuse: "
             "codebases, procedures, versioned APIs, background facts. Score low anything "
             "personal, volatile, location-like, easily confused with a sibling fact, or one-off. "
@@ -83,14 +83,14 @@ def validate(settings):
     for key, floor in FLOORS.items():
         if int(g[key]) < floor:
             raise GuardrailError("%s must be at least %d" % (key, floor))
-    for section, key in (("gate1", "reject_kinds"), ("gate2", "dream_kinds"), ("gate2", "never_dream_kinds"),
+    for section, key in (("gate1", "reject_kinds"), ("gate2", "consolidate_kinds"), ("gate2", "never_consolidate_kinds"),
                          ("gate2", "require_source_version_kinds"), ("gate2", "awareness_only_kinds")):
         unknown = set(settings[section][key]) - set(KINDS)
         if unknown:
             raise ValueError("%s.%s has unknown kinds %s" % (section, key, sorted(unknown)))
-    overlap = set(settings["gate2"]["dream_kinds"]) & set(settings["gate2"]["never_dream_kinds"])
+    overlap = set(settings["gate2"]["consolidate_kinds"]) & set(settings["gate2"]["never_consolidate_kinds"])
     if overlap:
-        raise ValueError("Kinds both dream and never dream: %s" % sorted(overlap))
+        raise ValueError("Kinds both consolidate and never consolidate: %s" % sorted(overlap))
     if settings["backend"]["kind"] not in ("none", "serving"):
         raise ValueError("backend.kind must be none or serving")
     if not 0 <= float(settings["gate2"]["min_judge_score"]) <= 1:

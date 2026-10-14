@@ -13,7 +13,7 @@ EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
 def test_strict_defaults_and_example_files_load():
     default = load_settings()
     assert "one_off_event" in default["gate1"]["reject_kinds"]
-    assert "person_name" in default["gate2"]["never_dream_kinds"]
+    assert "person_name" in default["gate2"]["never_consolidate_kinds"]
     assert load_settings(EXAMPLES / "settings-default.json")["gate2"] == default["gate2"] | {
         k: v for k, v in json.loads((EXAMPLES / "settings-default.json").read_text())["gate2"].items()}
     companion = load_settings(EXAMPLES / "profile-companion.json")
@@ -35,7 +35,7 @@ def test_guardrails_can_be_tightened_and_unknown_keys_refused():
     with pytest.raises(ValueError):
         load_settings({"schema_version": 1, "gate2": {"surprise": 1}})
     with pytest.raises(ValueError):
-        load_settings({"schema_version": 1, "gate2": {"dream_kinds": ["hostname"]}})
+        load_settings({"schema_version": 1, "gate2": {"consolidate_kinds": ["hostname"]}})
 
 
 def test_versions_are_stamped_and_checked(tmp_path):
@@ -50,6 +50,6 @@ def test_versions_are_stamped_and_checked(tmp_path):
     with pytest.raises(VersionMismatch):
         check(dict(bundle, schema_version=2), "pocket_bundle")
     with pytest.raises(VersionMismatch):
-        check(dict(stamp({}, "dream_bundle"), api_version="2.0"), "dream_bundle")
+        check(dict(stamp({}, "consolidation_bundle"), api_version="2.0"), "consolidation_bundle")
     with pytest.raises(VersionMismatch):
         check({"api_version": API_VERSION}, "pocket_entry")

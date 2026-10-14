@@ -11,7 +11,7 @@ Deciding which facts may be written permanently into model weights, and which mu
 - Gate 1 (front funnel): classify a candidate by kind and reuse; reject one-off, chatter and personal kinds; admit the rest to the pocket.
 - The pocket index tracks state, versions, supersedes, corrections and near-miss siblings.
 - Gate 2 (judge): hard rules first (kind, near-miss, volatility, source version, age), then a judge with its own instructions ranks and caps promotions.
-- Promotion: consolidate (a 'dream' pass, i.e. training or writing into weights), check regressions, roll back on failure, and free a pocket entry only with a passing pocket-off recall receipt.
+- Promotion: consolidate (a consolidation pass, i.e. training or writing into weights), check regressions, roll back on failure, and free a pocket entry only with a passing pocket-off recall receipt.
 
 ## Invariants
 
@@ -29,7 +29,7 @@ Origin setup: GLM-5.3-Flash (MoE, EXL3) served tensor-parallel across two machin
 ## Adapting it
 
 1. Edit the kinds and instructions for your domain; keep the locked guardrails.
-2. Inject your own classifier, judge, dream, recall, regress and rollback callables.
+2. Inject your own classifier, judge, consolidation, recall, regress and rollback callables.
 
 ## Untested or limited
 

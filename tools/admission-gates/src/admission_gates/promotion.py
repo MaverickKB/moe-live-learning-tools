@@ -1,7 +1,7 @@
-"""Tier 2: dream one promotion set, verify pocket-off, free or roll back.
+"""Tier 2: consolidate one promotion set, verify pocket-off, free or roll back.
 
 All heavy steps are injected so this runs on CPU with stubs:
-  dream(entries) -> checkpoint id      (trained expert path or write-not-train path)
+  consolidate(entries) -> checkpoint id      (trained expert path or write-not-train path)
   recall(checkpoint, entries) -> [{"entry_id", "pocket": "off", "passed"}]
       For a correction entry, passed means the new value is recalled and the
       old value (entry["corrects_value"]) is not. Awareness-only entries also
@@ -12,16 +12,16 @@ All heavy steps are injected so this runs on CPU with stubs:
 from .versioning import stamp
 
 
-def run_promotion(pocket, settings, promote, dream, recall, regress, rollback):
+def run_promotion(pocket, settings, promote, consolidate, recall, regress, rollback):
     g = settings["guardrails"]
     report = {"promoted": [e["id"] for e in promote], "freed": [], "kept": [], "rolled_back": False}
     if not promote:
         return report
     ids = [e["id"] for e in promote]
-    pocket.mark(ids, "dreaming")
+    pocket.mark(ids, "consolidating")
     for i in ids:
-        pocket.entries[i]["dream_attempts"] += 1
-    checkpoint = dream(promote)
+        pocket.entries[i]["consolidation_attempts"] += 1
+    checkpoint = consolidate(promote)
     report["checkpoint"] = checkpoint
     drops = regress(checkpoint)
     report["regression"] = drops
@@ -43,6 +43,6 @@ def run_promotion(pocket, settings, promote, dream, recall, regress, rollback):
             report["kept"].append(entry["id"])
     report["bundle"] = stamp({"checkpoint": checkpoint,
                               "entries": [{"id": e["id"], "kind": e["kind"], "source_version": e.get("source_version"),
-                                           "dream_mode": e["dream_mode"]} for e in promote if e["id"] in report["freed"]]},
-                             "dream_bundle")
+                                           "consolidation_mode": e["consolidation_mode"]} for e in promote if e["id"] in report["freed"]]},
+                             "consolidation_bundle")
     return report

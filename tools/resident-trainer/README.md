@@ -51,7 +51,8 @@ that setup; they do not show general quality.
 
 - **Sibling-value leaks.** Two near-miss facts answered with a value belonging to a
   neighbouring fact. Three approaches to fixing this were tried and **all failed**
-  (see `LESSONS.md`). This is unsolved.
+  (see `LESSONS.md`). The conclusion so far: exact, easily confused facts belong in
+  retrieval memory, not in weights.
 - Rewording generalisation is clearly weaker than recall on the trained phrasing (11 vs 16).
 - See `LESSONS.md` for the integration bugs found on the way and their fixes.
 

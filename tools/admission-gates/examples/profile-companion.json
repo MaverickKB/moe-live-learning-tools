@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "profile": "companion-use",
-  "_comments": "Proposal, untested: keeps small personal details in the pocket and lets stable preferences dream. Higher risk of over-personalization; guardrails still apply.",
+  "_comments": "Proposal, untested: keeps small personal details in the pocket and lets stable preferences consolidation. Higher risk of over-personalization; guardrails still apply.",
   "gate1": {"reject_kinds": ["chatter"], "min_reuse_score": 0.3},
-  "gate2": {"dream_kinds": ["codebase", "procedure", "api", "background", "preference"], "min_judge_score": 0.9}
+  "gate2": {"consolidate_kinds": ["codebase", "procedure", "api", "background", "preference"], "min_judge_score": 0.9}
 }

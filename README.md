@@ -5,6 +5,10 @@ facts **while it keeps serving**. They are the shortcuts we wish we had had: eac
 captures one hard lesson. They are **not products** and are not meant to be copied 1:1.
 Adapt the ideas to your engine, model and cluster.
 
+> **About this work.** This is an honest, ongoing investigation into what is possible, not a
+> claim of perfection. We make mistakes and backfill transparency as we go, in the hope that
+> others benefit and can skip the hard lessons we hit.
+
 ## The two results that matter
 
 1. **Learning inside live serving, without taking the model down.** A small set of added
@@ -18,7 +22,8 @@ Adapt the ideas to your engine, model and cluster.
 Measured on that one setup: the best added expert went from 0/24 to **16/24** on development
 facts (strict) and **11/24** on reworded questions, with the retrieval pocket switched off.
 The 14 control questions were unchanged. Two near-miss facts leaked a neighbouring fact's
-value, and three attempted fixes failed. Nothing here has been run on other hardware.
+value, and three attempted fixes failed; exact, easily confused facts belong in memory,
+not weights. Nothing here has been run on other hardware.
 
 ## Tools
 
@@ -57,6 +62,17 @@ new fact
 The training step and the measurement steps ran live on the origin setup. The admission
 gates, the automated loop around them and the drift probe were built and CPU-tested but have
 not run end to end. This is the direction being refined.
+
+## Standalone repositories
+
+Two of these tools also have their own repositories with deeper docs and examples:
+
+| Repository | Covers | URL |
+|---|---|---|
+| live-serving-expert-training | resident-trainer: architecture, porting guide, evaluation protocol, results | `https://example.invalid/TODO-fill-at-publish/live-serving-expert-training` (placeholder) |
+| tensor-parallel-side-jobs | paired-job-start + hot-load: sequence diagrams, porting guide, two-process CPU example | `https://example.invalid/TODO-fill-at-publish/tensor-parallel-side-jobs` (placeholder) |
+
+**TODO at publish time:** replace both placeholder URLs with the real repository URLs.
 
 ## Running tests
 

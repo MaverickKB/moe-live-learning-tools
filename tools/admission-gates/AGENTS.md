@@ -20,7 +20,7 @@ Read `README.md` first. Adapt the idea to your engine; do not copy it 1:1.
 ## To adapt
 
 1. Edit the kinds and instructions for your domain; keep the locked guardrails.
-2. Inject your own classifier, judge, dream, recall, regress and rollback callables.
+2. Inject your own classifier, judge, consolidation, recall, regress and rollback callables.
 
 ## Check before claiming it works
 
