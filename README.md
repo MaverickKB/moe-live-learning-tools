@@ -63,6 +63,12 @@ The training step and the measurement steps ran live on the origin setup. The ad
 gates, the automated loop around them and the drift probe were built and CPU-tested but have
 not run end to end. This is the direction being refined.
 
+## Why and how, lessons, origin
+
+- [docs/WHY_HOW.md](docs/WHY_HOW.md): why each tool exists and how it works.
+- [docs/LESSONS.md](docs/LESSONS.md): research lessons, what worked, what failed and why.
+- [docs/ORIGIN_STORY.md](docs/ORIGIN_STORY.md): chronological account of beliefs, evidence, decisions and results.
+
 ## Standalone repositories
 
 Two of these tools also have their own repositories with deeper docs and examples:
